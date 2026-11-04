@@ -53,8 +53,6 @@ references/                 画法、构图、配色、主题和生成提示词
 
 若导入器跳过 `assets/` 图片，Skill会在需要时从本公开仓库的 `raw.githubusercontent.com` 地址下载到任务专辑目录，再将实际本地图片传给生成工具。默认必需下载的是 `assets/channel-logo.png`；B站参考与默认画法仍以文字说明为主。新任务使用新的缓存，因此只更新仓库图片时不需要重新导入文本；修改SKILL.md或references规则后仍需刷新导入。
 
-在Multica中若同时存在GitHub导入版和运行时继承版，建议关闭相应智能体的“从运行时继承”，保留GitHub导入的唯一版本；不需要删除Codex本机Skill。开关是Multica设置，Git提交不会自动修改它。
-
 ## 更新与验证
 
 在克隆目录中修改并通过 Git 提交，以仓库历史管理版本。同步到其他环境时使用完整仓库，保持 `SKILL.md`、`references/` 与 `assets/` 一起更新。
