@@ -6,7 +6,7 @@
 
 Use case: style-transfer. Image 1 is the user's EXACT ORIGINAL ALBUM COVER, the EDIT TARGET, not an inspiration/reference for a replacement design. Convert ONLY rendering medium to {resolved_rendering_style}. Default, unless explicitly replaced by the user: refined semi-realistic editorial illustration with delicate selective contours, modest shape simplification, gently blended tonal modeling, controlled graphic highlights and subtle print grain. Not thick-outline flat cartoon, not a photographic/3D product render. If user supplies another visual style, substitute its coherent treatment rather than retaining incompatible default restrictions. Preserve original aspect ratio, internal composition, every main subject and object, identity, facial features, expression, pose, clothing, silhouettes, crop, relative positions, major shapes, original typography arrangement and palette distribution. Do not invent new album art, re-stage a portrait, replace a face with a new face/moon/monster, add holiday props inside the artwork or rearrange graphic design. No scene, turntable, logo, extra title or holiday decoration is added during this step. Output only the same full album cover after stylistic conversion. Do not remove original printed album text unless the user explicitly asks. This converted artwork will be reused unchanged across all track thumbnails.
 
-保存到 `<项目根目录>/<专辑名>/assets/album-cover-cartoon.png`，与原图逐项核对；不符合就修正，不拿重创封面作母版。
+保存到 `<任务工作目录>/assets/album-cover-cartoon.png`，与原图逐项核对；不符合就修正，不拿重创封面作母版。
 
 ## 第二阶段：每曲缩略图与外部场景
 
@@ -53,6 +53,8 @@ Recompose this CURRENT TRACK concept for {target_dimensions_and_ratio}; reuse th
 
 先检查本次所选画风：默认是否达到确认成品的细腻半写实插画程度，避免粗黑描边/过度平涂和照片/写实3D两端；显式画风则按该风格检查，不强套默认。专辑素材与外部场景画法一致，不能只给照片加颗粒滤镜。再检查唱片套内部是否与锁定素材相同，有无另画人物、姿势、图案或重排文字；有则失败。再检查占幅与空间：核心是否被缩成一边的小产品？空白是否只是无用途渐变？物件是否共用承托/接触影/透视，主题是否进入空间而不只是漂浮贴纸？优先拉近画面、放大主体、收紧文字/主体关系，再调整少量相关道具；不要通过加回固定音响或改专辑内部填空。再与本次调色分区和场景清单对照：有无无来源的全局紫/蓝/粉？是否小块封面颜色扩散全景？是否主题只体现为旧房间加几件贴纸？有无清单外架子、音箱、功放？如有，判为失败，不作为后续锚点；重新生成错误的场景/色彩，而非用更多否定词重复编辑同一污染图。
 
-## 保存位置
+## 保存位置与编号
 
-原封面副本、锁定卡通化素材、设计清单、各曲4:3与16:9成品，以及最终ZIP，都放在 `<项目根目录>/<专辑名>/` 内。禁止默认使用 `output/vinyl-covers/` 或Skill目录。打包明确枚举本次素材、最终图和清单，排除所有ZIP与草稿，ZIP自身也写入该专辑目录。
+最终目录为 `/Users/richy/视频剪辑/黑胶封面/<专辑名>/`（用户明确指定其他根目录时覆盖），顶层仅 `4x3/`、`16x9/`、`<专辑名>-封面合集.zip`。多碟歌单按正式顺序展开为全专辑连续序号，文件名 `01-歌曲名.png`，放进对应比例目录，不建立disc层。序号至少两位，两种比例一致；第二碟不重新从01编号。
+
+原图、锁定卡通素材、下载缓存、草稿、提示词、JSON和日志均放成品目录之外的独立任务工作目录。ZIP只含两种比例下的最终PNG，不夹带工作文件。先在工作目录完成与验证，再交付到成品目录；不在其下额外建版本/主题/运行目录。

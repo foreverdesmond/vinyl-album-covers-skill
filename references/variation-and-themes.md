@@ -41,13 +41,13 @@ LOGO使用 `assets/channel-logo.png` 透明成品，不再抠图或重绘；可�
 
 ## 设计计划
 
-`design-plan.json` 记录专辑级主题（可为空）、配色依据（各色来源、主辅面积、区域、允许/禁用色）、全新场景、主体占幅、前中后景及接触关系、集中标题区、主题空间锚点、允许道具和排除道具、实际生成输入文件列表、插画处理、字体候选；每曲记录 `disc`、`track`、`title`、`layout_family`、`viewpoint`、`record_design`、`turntable_design`、`props`、`font_style`、`caption_style`、`logo_position_by_ratio`、`differences_from_previous`。这是每次输出记录，不写回Skill成为固定歌单。
+`design-plan.json` 记录专辑级主题（可为空）、配色依据（各色来源、主辅面积、区域、允许/禁用色）、全新场景、主体占幅、前中后景及接触关系、集中标题区、主题空间锚点、允许道具和排除道具、实际生成输入文件列表、插画处理、字体候选；每曲记录全专辑连续 `sequence`、原始 `disc`、`track`、`title`、`layout_family`、`viewpoint`、`record_design`、`turntable_design`、`props`、`font_style`、`caption_style`、`logo_position_by_ratio`、`differences_from_previous`。这是每次输出记录，不写回Skill成为固定歌单。
 
 最后整体比较，避免每张单看合格、连看只是改字；变化不能牺牲准确文字、原色LOGO、专辑识别和醒目黑胶试听。
 
 ## 专辑图内部不参加变化
 
-家族A–E只改变整张卡通化唱片套在缩略图中的位置、透视及周围元素；不能重设计专辑图内部。字体轮换仅用于缩略图的歌手、歌曲名和黑胶试听，不重排原图自带文字。万圣节等主题可以改场景，不能把歌手变成怪物、把原封面换成月亮或用新姿势重画人物。所有输出与ZIP放在项目根目录下的专辑名目录，见SKILL.md。
+家族A–E只改变整张卡通化唱片套在缩略图中的位置、透视及周围元素；不能重设计专辑图内部。字体轮换仅用于缩略图的歌手、歌曲名和黑胶试听，不重排原图自带文字。万圣节等主题可以改场景，不能把歌手变成怪物、把原封面换成月亮或用新姿势重画人物。最终PNG与ZIP放在指定黑胶封面根目录的专辑名目录，按比例平铺连续编号；设计记录与素材在成品目录之外的任务工作目录，见SKILL.md。
 
 ## 黑胶试听的字号下限
 
