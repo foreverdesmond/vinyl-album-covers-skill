@@ -30,6 +30,6 @@ Agent按专辑的风格、画法、音乐氛围与清理后的歌名长度选择
 
 ## 日文：待用户确认
 
-当前展示方向为 Noto Serif JP Black（900）、Dela Gothic One Regular（400）、Reggae One Regular（400）、Yuji Boku Regular（400），分别用于重明朝、厚重海报、个性展示与毛笔方向。它们尚未自动成为正式候选池，等待用户确认或替换。官方字体源为Google Fonts仓库 `ofl/notoserifjp/`、`ofl/delagothicone/`、`ofl/reggaeone/`、`ofl/yujiboku/`。
+当前展示方向为 Noto Serif JP Black（900）、Mochiy Pop One Regular（400）、Reggae One Regular（400）、Yuji Boku Regular（400），分别用于重明朝、圆润可爱、个性展示与毛笔方向。它们尚未自动成为正式候选池，等待用户确认或替换。官方字体源为Google Fonts仓库 `ofl/notoserifjp/`、`ofl/mochiypopone/`、`ofl/reggaeone/`、`ofl/yujiboku/`。
 
 日文按整段标题/词组使用日文字体，汉字与平假名、片假名属于同一日文段落，不得把日文汉字单独套进中文映射导致一行内字形风格混乱。中英日混排按语言段落/词组与已锁定映射处理，数字和标点跟随所属段落。候选确认后同样由主任务按专辑选一种、两种比例与各曲目统一。
