@@ -28,9 +28,9 @@ SCENE FROM SCRATCH: {new_scene_not_a_modified_old_listening_room}. Required prop
 LAYOUT: {family_geometry_and_perspective}, strong close-framed display presence and concentrated title space. PRIMARY SCALE: {sleeve_scale_and_combined_equipment_span}. DEPTH: {foreground_midground_background_and_overlap}. CONTACT: {support_surface_contact_shadows_and_shared_perspective}. THEME SPACE: {theme_material_edges_or_structures_related_to_record_setup}. Expand primary subjects and connect them visually instead of shrinking a product cluster into one half against an empty gradient. Keep album artwork fully visible internally; only secondary equipment/environment may extend out of frame. Titles can visually overlap calm outer scene areas while retaining readability, never cover the artwork's key face/details. Fog is supporting atmosphere, not a substitute for physical space. Do not add random props to fill gaps. Background structure remains theme-specific and within the planned palette; no automatic shelves/speakers.
 RECORD/TURNTABLE: {planned_design_and_placement}, plausible physical arrangement; the sleeve face uses the exact locked artwork, no new album labels/text.
 THEME PROPS: {few_relevant_motifs_and_locations}, supporting not cluttering.
-TYPOGRAPHY: {font_style_line_break_plan_and_caption_treatment}. Clear exact lettering. "黑胶试听" is a PRIMARY visual headline, not a small subtitle: all four characters on ONE line, bold/heavy weight, high contrast, actual glyph height target 10–13% of full canvas height and hard minimum 9% (excluding frame/padding), at least as tall as the artist name, approximately 70–90% of a short Chinese song title glyph height. For 1600x1200 target glyph height 120–156px, minimum 108px; for 1920x1080 target 108–140px, minimum 97px. Reserve its space early. Enlarge the actual letters, not just the box. No thin/low-opacity lettering. Wrap long song names or remove props instead of shrinking this headline. Do not modify logo script.
+TYPOGRAPHY LOCK: use the provided shared typography.json and glyph samples: Chinese {locked_chinese_family_weight}, Latin {locked_latin_family_weight}, Japanese {locked_japanese_family_weight}. Exactly one font family and weight per script throughout this album, across tracks, artist labels, aspect ratios and agents. Mixed scripts follow the same mapping. Never independently choose a new font or substitute by mood; adjust size and line breaks only, no horizontal glyph distortion. Fixed channel wording 黑胶试听 uses Source Han Sans SC Heavy on ALL albums, independent of theme/style override and album title font mapping. Reuse the supplied locked caption lettering asset {resolved_caption_asset_path}; no regeneration/retyping with a different face. Colors/outline may follow current palette while glyph design and weight stay fixed. {line_break_plan_and_caption_treatment}. Clear exact lettering. "黑胶试听" is a PRIMARY visual headline, not a small subtitle: all four characters on ONE line, bold/heavy weight, high contrast, actual glyph height target 10–13% of full canvas height and hard minimum 9% (excluding frame/padding), at least as tall as the artist name, approximately 70–90% of a short Chinese song title glyph height. For 1600x1200 target glyph height 120–156px, minimum 108px; for 1920x1080 target 108–140px, minimum 97px. Reserve its space early. Enlarge the actual letters, not just the box. No thin/low-opacity lettering. Wrap long song names or remove props instead of shrinking this headline. Do not modify logo script.
 LOGO: place the full supplied transparent PNG intact at {position}, 11–16% canvas width, about 5% inset from nearby edges, no face/title overlap or bottom-right duration area. Original colors, no scene tint.
-VARIATION: {two_visible_differences_from_previous_track}.
+VARIATION: {two_visible_non_font_differences_from_previous_track}. Font changes are NOT permitted variation; use layout, viewpoint, equipment, record/props or logo placement instead.
 ASPECT: {4:3_1600x1200_or_16:9_1920x1080}. One image, no grid, no clipping.
 
 ## 可选原始B站附图
@@ -47,11 +47,13 @@ Recompose this CURRENT TRACK concept for {target_dimensions_and_ratio}; reuse th
 
 ## 同专辑后续曲目
 
+每个执行子任务必须先加载同一typography.json、标题字形样张与固定黑胶试听素材；这些都是只读输入，不能各自重新设计。
+
 只能使用当前同专辑、同主题且已通过配色/场景检查的锚点。按每曲完整计划变换至少两项设计，不仅替换歌名。若换主题或图已污染，丢弃锚点，重新从锁定卡通化素材+LOGO+文字原则生成外部场景，而不是在污染图上继续加配饰。
 
 ## 检查与返修
 
-先检查本次所选画风：默认是否达到确认成品的细腻半写实插画程度，避免粗黑描边/过度平涂和照片/写实3D两端；显式画风则按该风格检查，不强套默认。专辑素材与外部场景画法一致，不能只给照片加颗粒滤镜。再检查唱片套内部是否与锁定素材相同，有无另画人物、姿势、图案或重排文字；有则失败。再检查占幅与空间：核心是否被缩成一边的小产品？空白是否只是无用途渐变？物件是否共用承托/接触影/透视，主题是否进入空间而不只是漂浮贴纸？优先拉近画面、放大主体、收紧文字/主体关系，再调整少量相关道具；不要通过加回固定音响或改专辑内部填空。再与本次调色分区和场景清单对照：有无无来源的全局紫/蓝/粉？是否小块封面颜色扩散全景？是否主题只体现为旧房间加几件贴纸？有无清单外架子、音箱、功放？如有，判为失败，不作为后续锚点；重新生成错误的场景/色彩，而非用更多否定词重复编辑同一污染图。
+先将同脚本歌名/歌手与锁定字体样张逐项比较，确认全专辑统一，黑胶试听为固定字样，不接受每曲近似但不同字形；必要时统一排字合成。再检查本次所选画风：默认是否达到确认成品的细腻半写实插画程度，避免粗黑描边/过度平涂和照片/写实3D两端；显式画风则按该风格检查，不强套默认。专辑素材与外部场景画法一致，不能只给照片加颗粒滤镜。再检查唱片套内部是否与锁定素材相同，有无另画人物、姿势、图案或重排文字；有则失败。再检查占幅与空间：核心是否被缩成一边的小产品？空白是否只是无用途渐变？物件是否共用承托/接触影/透视，主题是否进入空间而不只是漂浮贴纸？优先拉近画面、放大主体、收紧文字/主体关系，再调整少量相关道具；不要通过加回固定音响或改专辑内部填空。再与本次调色分区和场景清单对照：有无无来源的全局紫/蓝/粉？是否小块封面颜色扩散全景？是否主题只体现为旧房间加几件贴纸？有无清单外架子、音箱、功放？如有，判为失败，不作为后续锚点；重新生成错误的场景/色彩，而非用更多否定词重复编辑同一污染图。
 
 ## 保存位置与编号
 
