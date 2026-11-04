@@ -28,8 +28,17 @@ Agent按专辑的风格、画法、音乐氛围与清理后的歌名长度选择
 
 官方字体源为Google Fonts仓库 `ofl/notoserifsc/`、`ofl/zcoolkuaile/`、`ofl/zcoolqingkehuangyou/`、`ofl/mashanzheng/`。站酷小薇体已否决，不列入候选。每次须核对歌名全部字形有覆盖，不能缺字后让模型编造，不能把中文字体的日文假名缺失交给随机回退。
 
-## 日文：待用户确认
+## 日文：已确认候选池
 
-当前展示方向为 Noto Serif JP Black（900）、Mochiy Pop One Regular（400）、Reggae One Regular（400）、Yuji Boku Regular（400），分别用于重明朝、圆润可爱、个性展示与毛笔方向。它们尚未自动成为正式候选池，等待用户确认或替换。官方字体源为Google Fonts仓库 `ofl/notoserifjp/`、`ofl/mochiypopone/`、`ofl/reggaeone/`、`ofl/yujiboku/`。
+主任务按专辑风格从下表选择一种；所有日文歌手名、日文曲名、两种比例和子任务统一该字族及字重。不同专辑可换候选，不逐曲重选。
 
-日文按整段标题/词组使用日文字体，汉字与平假名、片假名属于同一日文段落，不得把日文汉字单独套进中文映射导致一行内字形风格混乱。中英日混排按语言段落/词组与已锁定映射处理，数字和标点跟随所属段落。候选确认后同样由主任务按专辑选一种、两种比例与各曲目统一。
+| 字族与准确样式 | 字重/样式 | 选字方向 |
+| --- | --- | --- |
+| Noto Serif JP Black | 900 / 正体 | 重明朝，典雅、有张力 |
+| Mochiy Pop One Regular | 400 / 正体，不伪粗 | 圆润、可爱、轻快 |
+| Reggae One Regular | 400 / 正体，不伪粗 | 棱角鲜明的个性展示标题 |
+| Yuji Boku Regular | 400 / 正体，不伪粗 | 和风、毛笔笔触 |
+
+官方字体源为Google Fonts仓库 `ofl/notoserifjp/`、`ofl/mochiypopone/`、`ofl/reggaeone/`、`ofl/yujiboku/`。Dela Gothic One已被替换，不再使用。
+
+日文按整段标题/词组使用日文字体，汉字与平假名、片假名共用日文字体，不能按单字回退到中文映射。中英日混排按语言段落/词组使用已锁定映射，数字和标点跟随所属段落。所谓“每专辑一种”指每种实际语言各选一种，歌手与歌曲按语言共用，不能给歌手另选字体；频道“黑胶试听”是唯一独立固定字样，不参与候选选择。
