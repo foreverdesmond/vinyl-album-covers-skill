@@ -1,0 +1,7 @@
+interface:
+  display_name: "Vinyl Album Covers"
+  short_description: "基于原始B站要点，独立取当前唱片配色、重建主题场景，双比例逐曲出图打包"
+  icon_large: "./assets/preview.png"
+  default_prompt: "使用 $artifact-template-vinyl-album-covers，根据我上传的唱片封面、歌手、专辑名及可选主题，生成构图与字体有变化的全专辑4:3和16:9封面，并打包ZIP交付。"
+policy:
+  allow_implicit_invocation: true
