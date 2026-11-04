@@ -11,7 +11,7 @@ Agent按专辑的风格、画法、音乐氛围与清理后的歌名长度选择
 | DM Serif Display Italic | 400 / Italic，本身为展示设计，不伪造Bold | 流畅、较柔和的展示斜体 |
 | Racing Sans One Regular | 400 / 正式样式名Regular，字体自带倾斜动势，不额外伪斜 | 动感、有力量的无衬线展示标题 |
 
-字体来源为Google Fonts官方仓库，对应目录 `ofl/playfairdisplay/`、`ofl/fraunces/`、`ofl/dmserifdisplay/`、`ofl/racingsansone/`。实际使用准确字体文件/字样样张，不依靠模型从名称猜字。字体文件不随本Skill打包，避免突破Agent单文件大小限制；运行时按环境获取字体，或由主任务提供已排好的透明标题素材。不得在无法加载时让子Agent各自替换。
+字体来源为Google Fonts官方仓库，对应目录 `ofl/playfairdisplay/`、`ofl/fraunces/`、`ofl/dmserifdisplay/`、`ofl/racingsansone/`。把准确字体名称、字重/样式及表中的设计特征写入生图提示词，让模型在完整封面中直接生成文字。已有准确字形样张可作视觉参考，不要求安装字体或制作透明标题层；不得默认后期排字合成。字体文件不随本Skill打包。生成式字体复现可能有偏差，由用户审核；不得让子Agent各自替换字体。
 
 “Black Italic”是本Skill锁定的字重/样式组合，变量字体需设置相应轴；不能只用同名家族默认400正体。全专辑字号、换行可按模板适配，字族、样式和字重不变。纯中文曲目不必强塞英文；混排曲名按已锁定的中英映射分别排字。
 
@@ -26,7 +26,7 @@ Agent按专辑的风格、画法、音乐氛围与清理后的歌名长度选择
 | 站酷庆科黄油体 ZCOOL QingKe HuangYou Regular | 400 / 正体，不伪粗 | 圆润、几何感、适合轻快现代方向 |
 | 马善政毛笔楷书 Ma Shan Zheng Regular | 400 / 正体，不伪粗 | 有书写感的国风、怀旧方向 |
 
-官方字体源为Google Fonts仓库 `ofl/notoserifsc/`、`ofl/zcoolkuaile/`、`ofl/zcoolqingkehuangyou/`、`ofl/mashanzheng/`。站酷小薇体已否决，不列入候选。每次须核对歌名全部字形有覆盖，不能缺字后让模型编造，不能把中文字体的日文假名缺失交给随机回退。
+官方字体源为Google Fonts仓库 `ofl/notoserifsc/`、`ofl/zcoolkuaile/`、`ofl/zcoolqingkehuangyou/`、`ofl/mashanzheng/`。站酷小薇体已否决，不列入候选。提示词传入准确完整的可见文案并核对生成结果，缺字/错字列给用户审核；中文字体不用于日文假名，避免随机回退。
 
 ## 日文：已确认候选池
 
