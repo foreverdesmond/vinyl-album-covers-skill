@@ -15,6 +15,11 @@ description: "根据唱片封面、歌手、专辑名和可选主题，核实曲
 
 读取 `artifact-template.json`，所有路径相对此 Skill 所在目录解析，勿依赖原聊天、临时目录或外接磁盘。
 
+**二进制素材缺失时自动下载**：部分运行时仅导入UTF-8文本，会跳过 `assets/` 图片。实际需要某个素材时，先检查Skill目录；若本地不存在，从 `https://raw.githubusercontent.com/foreverdesmond/vinyl-album-covers-skill/main/<路径>` 下载，其中 `<路径>` 是仓库内完整相对路径（如 `assets/channel-logo.png`）。保存到本次任务的 `<项目根目录>/<专辑名>/assets/skill-cache/<路径>`，保留子目录，不写回Skill安装目录。把这个**实际可读取的本地路径**传给图像工具，不继续引用缺失的Skill路径，也不把下载URL当作已附入的图片。
+
+只按需下载：LOGO必须取得 `assets/channel-logo.png`，B站参考和画法校准图默认仍只读文字，确需图片时再下载。确认请求成功、内容可解码为图片，LOGO具备透明通道；不能将404/HTML错误页存成PNG，失败时不得重画替代LOGO或假称已加载。下载失败时说明具体缺失项并请求补充素材。每个新任务新建缓存并从 `main` 获取当前版本，记录来源URL；仅更换仓库图片时无需重新导入文本Skill即可让后续缺图运行时取得新素材。同一任务复用已核对缓存，保持专辑内一致。
+
+
 - `references/bilibili-style-notes.md`：**频道构图与陈列关系的正式来源**，从用户最初指定的三个B站封面提炼要点，开始规划时读取。
 - `assets/bilibili-references/bilibili-1.jpg`、`bilibili-2.jpg`、`bilibili-3.jpg`：上述三个B站原始封面。默认用文字要点，需要视觉辅助或用户要求时才附这些图片；不复制其主体、色调、徽章或固定器材。
 - `assets/reference.png` 与 `assets/preview.png`：第一张原始B站参考的PNG版本，用于模板存档/图库展示，已替换旧陈奕迅成品。默认仍采用文字要点，平台展示图片不代表允许继承其颜色/场景。
