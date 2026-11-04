@@ -18,14 +18,16 @@ description: "根据唱片封面、歌手、专辑名和可选主题，核实曲
 - `references/bilibili-style-notes.md`：**频道构图与陈列关系的正式来源**，从用户最初指定的三个B站封面提炼要点，开始规划时读取。
 - `assets/bilibili-references/bilibili-1.jpg`、`bilibili-2.jpg`、`bilibili-3.jpg`：上述三个B站原始封面。默认用文字要点，需要视觉辅助或用户要求时才附这些图片；不复制其主体、色调、徽章或固定器材。
 - `assets/reference.png` 与 `assets/preview.png`：第一张原始B站参考的PNG版本，用于模板存档/图库展示，已替换旧陈奕迅成品。默认仍采用文字要点，平台展示图片不代表允许继承其颜色/场景。
-- `assets/history/eason-16x9.png`、`assets/history/eason-4x3.png`、`assets/reference-4x3.png`：陈奕迅精选已确认成品，作为**默认画法的校准依据**。仅提炼细腻线条、柔和体积、适量纹理的文字画法，不作为默认附图，不能继承其人物、蓝紫粉、家具、字体或布局；显式画风输入覆盖它。
+- `assets/history/eason-16x9.jpg`、`assets/history/eason-4x3.jpg`：陈奕迅精选已确认成品，作为**默认画法的校准依据**。仅提炼细腻线条、柔和体积、适量纹理的文字画法，不作为默认附图，不能继承其人物、蓝紫粉、家具、字体或布局；显式画风输入覆盖它。
 - **`assets/channel-logo.png`：唯一默认传入的频道LOGO成品素材**，已提取中央圆形标志，外围为真实透明背景。直接使用完整PNG，不再抠图、分割、重画字样或改色；只允许等比缩放及按计划移动。
-- `assets/channel-logo-source.eps`、`assets/channel-logo-source.png`：原始矢量和整张预览，仅存档。不默认查看，不传给生成模型，不要求模型再从中提取中央区域。
+- `assets/channel-logo-source.png`：原始整张预览，仅存档；不再包含EPS矢量文件。不默认查看，不传给生成模型，不要求模型再从中提取中央区域。
 - `assets/example-album-cover.jpg`：旧示例专辑的原始封面，仅记录旧次卡通化处理。它是**陈奕迅精选 Vol Two**，不是U87。此图是历史档案，不作为新任务的生成输入；不能继承其歌手、曲名或配色。
 - `references/rendering-style.md`：默认画法、用户画风覆盖及与主题/配色的分离规则，先读取。
 - `references/generation-brief.md`：生成及局部编辑提示词，开始出图前读取。
 - `references/spatial-composition.md`：从B站参考补充的近景陈列、画面充实度、接触关系和主题空间规则，规划构图时读取。
 - `references/variation-and-themes.md`：布局、字体、器材轮换与主题适配规则，规划专辑时读取。布局家族是文字策划工具，不是需要传入的陈奕迅成品。
+
+**Skill素材体积限制**：本仓库每个交付给Agent的文件须严格小于1,000,000字节。更新素材时同步更新引用并检查大小；LOGO保留透明PNG，画法参考可用高质量JPG。此限制针对Skill包文件，不擅自压低用户最终封面输出尺寸。
 
 ## 输入与曲目核实
 
