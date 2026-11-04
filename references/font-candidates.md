@@ -7,11 +7,11 @@ Agent按专辑的风格、画法、音乐氛围与清理后的歌名长度选择
 | 字族与准确样式 | 字重/样式 | 选字方向 |
 | --- | --- | --- |
 | Playfair Display Black Italic | 900 / Italic | 厚实、动势明显的展示衬线标题 |
-| Bodoni Moda Black Italic | 900 / Italic，光学尺寸也需固定 | 强烈粗细对比、戏剧化海报标题 |
+| Fraunces Black Italic | 900 / Italic；固定opsz=96、SOFT=50、WONK=1 | 厚实圆润、略带复古俏皮感的海报标题 |
 | DM Serif Display Italic | 400 / Italic，本身为展示设计，不伪造Bold | 流畅、较柔和的展示斜体 |
 | Racing Sans One Regular | 400 / 正式样式名Regular，字体自带倾斜动势，不额外伪斜 | 动感、有力量的无衬线展示标题 |
 
-字体来源为Google Fonts官方仓库，对应目录 `ofl/playfairdisplay/`、`ofl/bodonimoda/`、`ofl/dmserifdisplay/`、`ofl/racingsansone/`。实际使用准确字体文件/字样样张，不依靠模型从名称猜字。字体文件不随本Skill打包，避免突破Agent单文件大小限制；运行时按环境获取字体，或由主任务提供已排好的透明标题素材。不得在无法加载时让子Agent各自替换。
+字体来源为Google Fonts官方仓库，对应目录 `ofl/playfairdisplay/`、`ofl/fraunces/`、`ofl/dmserifdisplay/`、`ofl/racingsansone/`。实际使用准确字体文件/字样样张，不依靠模型从名称猜字。字体文件不随本Skill打包，避免突破Agent单文件大小限制；运行时按环境获取字体，或由主任务提供已排好的透明标题素材。不得在无法加载时让子Agent各自替换。
 
 “Black Italic”是本Skill锁定的字重/样式组合，变量字体需设置相应轴；不能只用同名家族默认400正体。全专辑字号、换行可按模板适配，字族、样式和字重不变。纯中文曲目不必强塞英文；混排曲名按已锁定的中英映射分别排字。
 
