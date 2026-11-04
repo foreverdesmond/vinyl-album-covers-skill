@@ -6,13 +6,17 @@
 
 ## 使用
 
-将本仓库克隆到个人 Skill 目录，保留现有 Skill 标识：
+以项目目录为唯一工作副本，本地 Codex 通过软链接使用，保留现有 Skill 标识：
 
 ```bash
-git clone https://github.com/foreverdesmond/vinyl-album-covers-skill.git ~/.codex/skills/artifact-template-vinyl-album-covers
+git clone https://github.com/foreverdesmond/vinyl-album-covers-skill.git ~/Projects/CodexImages/vinyl-album-covers-skill
+mkdir -p ~/.codex/skills
+ln -s ~/Projects/CodexImages/vinyl-album-covers-skill ~/.codex/skills/artifact-template-vinyl-album-covers
 ```
 
-如果该路径已安装旧版，请先保存旧目录，再将仓库安装到同一路径，不要覆盖未保存的修改。
+仓库已存在时无需重新克隆。Skill 路径已存在时，先比较差异并将原目录备份到 `~/.codex/skill-backups/`，再建立软链接；不要覆盖未保存的修改，也不要把备份留在可发现 Skill 的目录下。
+
+所有编辑统一在 `~/Projects/CodexImages/vinyl-album-covers-skill` 进行，本地 Codex 立即读到同一份文件；提交并 `git push` 后，Multica 通过刷新 GitHub 导入版获取文本规则，再分配给设计智能体。Git 推送不会自动触发 Multica 刷新。二进制素材缺失时按下文的下载回退处理。
 
 在支持 Skill 的环境中调用 `$artifact-template-vinyl-album-covers`，上传唱片封面并提供：
 
