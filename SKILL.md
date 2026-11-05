@@ -9,7 +9,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 
 | 阶段 | 执行人 | 内容 | 之后 |
 |---|---|---|---|
-| sketch | Gemini | 原封面转简笔画 | 人工审核 |
+| sketch | Gemini | 原封面转彩色简笔画 | 人工审核 |
 | sample | GPT | 只出样片曲目的 4:3 和 16:9 | 人工审核,退回则带意见重做 |
 | full | GPT | 出剩余曲目,生成一张总览图和 ZIP | 人工审核 |
 
@@ -32,9 +32,12 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 ## sketch 阶段(Gemini)
 
 1. 把任务里的原封面保存到 `_work/original-cover.<扩展名>`。
-2. 用 `references/prompts.md` 的简笔画提示词,以原封面为编辑对象生成,保存为 `_work/album-cover-sketch.png`。
-3. 退回重做时,把人工意见加进提示词。
-4. 把简笔画挂到任务评论,交回管理员。
+2. 用 `references/prompts.md` 的简笔画提示词生成,同时传入原封面和画法参考图,保存为 `_work/album-cover-sketch.png`。
+3. 提示词必须原文交给生图工具。使用子任务时也一样,不要翻译、改写或扩写,不要自行加入 black and white、line art 这类描述。
+4. 交付前打开图片检查:必须是彩色,原有主要配色还在,没有相框、黑边或说明文字。不合格时用原提示词重出,最多 2 次;仍不合格就在评论里写明问题。
+5. 退回重做时,把人工意见加进提示词。
+6. 只读取本任务的原封面和本 Skill 的文件,不要参考其他专辑目录里的旧图或旧提示词。
+7. 把简笔画挂到任务评论,交回管理员。
 
 ## sample 阶段(GPT)
 
@@ -47,15 +50,16 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 ## full 阶段(GPT)
 
 1. 重新运行准备脚本,把已通过的两张样片作为额外参数传入。
-2. 逐首生成剩余曲目的 4:3 和 16:9,每张图单独生成一次。不要改动已通过的样片。
-3. 退回时只重做被指出的图片。
-4. 生成待审总览图,跳过样片序号:
+2. 按 `references/prompts.md` 的 A、B、C、D 版式给剩余曲目排表,写入 `_work/design-plan.json`。相邻曲目不用同一版式,紧跟样片的曲目不用样片的版式,同一首歌的 4:3 和 16:9 用同一版式。
+3. 逐首生成剩余曲目的 4:3 和 16:9,每张图单独生成一次。画风、配色、唱片封面、字体和配饰与样片一致;唱片封面、唱机和文字的位置按版式变化。不要改动已通过的样片。
+4. 退回时只重做被指出的图片。
+5. 生成待审总览图,跳过样片序号:
 
    ```bash
    zsh scripts/make_review_sheet.sh "<专辑目录>" "<专辑目录>/_work/review-sheet.jpg" 01
    ```
 
-5. 打包 ZIP,确认图片数等于曲目数的两倍。
+6. 打包 ZIP,确认图片数等于曲目数的两倍。
 
 ## 参考图交付
 
@@ -67,15 +71,15 @@ zsh scripts/prepare_gpt_inputs.sh "<专辑目录>/_work/album-cover-sketch.png" 
 
 Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-album-covers-skill/scripts/` 下的同名脚本。
 
-脚本输出的每张图都小于 1,000,000 字节,并写入 `manifest.json`:
+生图工具最多接受 5 张参考图。脚本每次最多输出 5 张,每张都小于 1,000,000 字节,并写入 `manifest.json`:
 
 | 文件 | 作用 |
 |---|---|
 | `01-album-sketch.jpg` | 已通过审核的简笔画封面 |
-| `02`–`04-bilibili-layout-*.jpg` | 构图和元素位置参考 |
-| `05-style-eason-wo-bu-hao-ai.jpg` | 风格参考 |
-| `06-channel-logo.png` | 频道 LOGO |
-| `07`、`08-approved-sample-*.jpg` | 已通过样片,仅 full 阶段 |
+| `02`、`03-bilibili-layout-*.jpg` | 构图和元素位置参考,仅 sample 阶段 |
+| `04-style-eason-wo-bu-hao-ai.jpg` | 风格参考 |
+| `05-channel-logo.png` | 频道 LOGO |
+| `06`、`07-approved-sample-*.jpg` | 已通过样片,仅 full 阶段,替代 B 站构图图 |
 
 规则:
 

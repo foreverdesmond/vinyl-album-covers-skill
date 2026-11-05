@@ -1,15 +1,19 @@
 #!/bin/zsh
-# 准备交给 GPT 的参考图:每张都小于 1,000,000 字节,缺图或超限时失败退出。
+# 准备交给 GPT 的参考图:最多 5 张,每张都小于 1,000,000 字节,缺图或超限时失败退出。
+# 不传样片时用 2 张 B 站构图图;传入样片时用样片替代 B 站构图图。
 # 用法:prepare_gpt_inputs.sh <已通过的简笔画封面> <输出目录> [已通过的样片...]
 set -u
 LIMIT=1000000
 RAW=https://raw.githubusercontent.com/foreverdesmond/vinyl-album-covers-skill/main/assets/gpt-inputs
 LOCAL=/Users/richy/Projects/CodexImages/vinyl-album-covers-skill/assets/gpt-inputs
 HERE=${0:A:h}/../assets/gpt-inputs
-FIXED=(02-bilibili-layout-1.jpg 03-bilibili-layout-2.jpg 04-bilibili-layout-3.jpg 05-style-eason-wo-bu-hao-ai.jpg 06-channel-logo.png)
+MAX_IMAGES=5
+FIXED=(02-bilibili-layout-1.jpg 03-bilibili-layout-2.jpg 04-style-eason-wo-bu-hao-ai.jpg 05-channel-logo.png)
 
 [[ $# -ge 2 ]] || { print -u2 "用法:$0 <简笔画封面> <输出目录> [样片...]"; exit 2; }
 sketch=$1; out=$2; shift 2
+[[ $# -le 2 ]] || { print -u2 "【输入图超限】样片最多 2 张"; exit 1; }
+[[ $# -eq 0 ]] || FIXED=(04-style-eason-wo-bu-hao-ai.jpg 05-channel-logo.png)
 [[ -s $sketch ]] || { print -u2 "【输入图缺失】简笔画封面:$sketch"; exit 1; }
 mkdir -p "$out" || exit 1
 rm -f "$out"/*(N)
@@ -53,12 +57,15 @@ for name in $FIXED; do
   shrink "$tmp" "$out/$name" || { print -u2 "【输入图超限】$name"; exit 1; }
   rm -f "$tmp"
 done
-n=7
+n=6
 for s in "$@"; do
   [[ -s $s ]] || { print -u2 "【输入图缺失】样片:$s"; exit 1; }
-  shrink "$s" "$out/0$n-approved-sample-$((n-6)).jpg" || { print -u2 "【输入图超限】样片:$s"; exit 1; }
+  shrink "$s" "$out/0$n-approved-sample-$((n-5)).jpg" || { print -u2 "【输入图超限】样片:$s"; exit 1; }
   n=$((n+1))
 done
+
+count=$(print -l "$out"/*.(jpg|png) | wc -l | tr -d " ")
+[[ $count -le $MAX_IMAGES ]] || { print -u2 "【输入图超限】共 $count 张,最多 $MAX_IMAGES 张"; exit 1; }
 
 {
   print '['
