@@ -9,7 +9,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 
 | 阶段 | 执行人 | 内容 | 之后 |
 |---|---|---|---|
-| sketch | Gemini | 原封面转彩色简笔画 | 人工审核 |
+| sketch | Gemini,额度耗尽时 WorkBuddy 接管 | 原封面转彩色简笔画 | 人工审核 |
 | sample | GPT | 只出样片曲目的 4:3 和 16:9 | 人工审核,退回则带意见重做 |
 | full | GPT | 出剩余曲目,生成一张总览图和 ZIP | 人工审核 |
 
@@ -29,7 +29,9 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 
 序号按实际出图的曲目连续编号。文件名里的非法字符做必要替换,图上的文字保持准确。重出时直接覆盖。
 
-## sketch 阶段(Gemini)
+## sketch 阶段(Gemini,额度耗尽时 WorkBuddy 接管)
+
+默认由 Gemini 执行。只有 Gemini 报生图额度耗尽(429、RESOURCE_EXHAUSTED 或 quota)时,才由管理员改派给 WorkBuddy 接管,步骤和提示词相同。执行人不要自行换人或换工具,报【生图失败】交回管理员即可。
 
 1. 把任务里的原封面保存到 `_work/original-cover.<扩展名>`。
 2. 用 `references/prompts.md` 的简笔画提示词生成,同时传入原封面和画法参考图,保存为 `_work/album-cover-sketch.png`。
