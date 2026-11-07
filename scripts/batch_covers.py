@@ -24,6 +24,7 @@ IMAGE_MODEL = "codex/gpt-image-2"
 RATIOS = {"4x3": ("4:3", 4 / 3), "16x9": ("16:9", 16 / 9)}
 RATIO_TOLERANCE = 0.005
 MAX_TRIES = 3  # 首次 + 重出 2 次
+MIN_PROPS = 4
 SECONDS_PER_IMAGE = 80
 QUOTA_ERROR = re.compile(r"\b429\b|usage limit|rate.?limit|quota|resource.?exhausted", re.I)
 ILLEGAL_NAME = re.compile(r'[/\\:*?"<>|]')
@@ -89,7 +90,7 @@ def build_prompt(templates, config, title, layout, ratio, note):
             "歌曲名次之。", "歌曲名次之。画面上不要出现歌手名、主创姓名或‘无歌手’这类文字。"
         )
     prompt = prompt.replace("{歌曲名}", title)
-    prompt = prompt.replace("{封面可包含的元素}", config["elements"])
+    prompt = prompt.replace("{具体物件清单}", config["elements"])
     prompt = prompt.replace("{4:3 或 16:9}", ratio)
     prompt = prompt.replace("{退回重做时追加:审核意见:...}", f"审核意见:{note}" if note else "")
     if re.search(r"\{[^}]*\}", prompt):
@@ -344,6 +345,9 @@ def main():
         os.makedirs(os.path.join(work, "batch-tmp"), exist_ok=True)
         started = time.time()
         if todo:
+            props = [p for p in re.split(r"[、,,;;\n]+", config["elements"]) if p.strip()]
+            if len(props) < MIN_PROPS:
+                raise InputError(f"batch-config.json 的 elements 只有 {len(props)} 个物件,至少要 {MIN_PROPS} 个具体物件")
             templates = load_templates()
             references = prepare_references(album, sample)
             if len(references) != 5:

@@ -57,8 +57,8 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 
 1. 查官方或可靠音乐目录,核实曲目和曲序,写入 `_work/tracklist.json`,记录来源和版本。不出图的曲目保留记录,但不占成品编号。
 2. 运行参考图准备脚本,见下一节。
-3. 用 `references/prompts.md` 的封面提示词,样片曲目的 4:3 和 16:9 各生成一次。
-4. 把本次使用的提示词、配色和字体风格写入 `_work/design-plan.json`。
+3. 按 `references/prompts.md` 把卡片元素展开成不少于 4 个具体物件,再用封面提示词为样片曲目的 4:3 和 16:9 各生成一次。
+4. 把本次使用的提示词、配色、字体风格和物件清单写入 `_work/design-plan.json`,物件清单的字段名是 `props`,格式是字符串数组。
 5. 退回重做时,把人工意见逐条加进提示词,再重新生成。
 
 ## full 阶段(批量脚本)
@@ -70,7 +70,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
    ```json
    {
      "singer": "歌手名,没有就留空",
-     "elements": "封面可包含的元素",
+     "elements": "design-plan.json 的 props,用顿号连接,不少于 4 个",
      "sample_track": 1,
      "skip_sample": false,
      "forbidden_texts": ["不能上图的文字,如主创姓名"],
