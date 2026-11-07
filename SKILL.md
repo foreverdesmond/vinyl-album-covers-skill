@@ -11,7 +11,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 |---|---|---|---|
 | sketch | Gemini,额度耗尽时 WorkBuddy 接管 | 原封面转彩色简笔画 | 人工审核 |
 | sample | GPT | 只出样片曲目的 4:3 和 16:9 | 人工审核并排期,退回则带意见重做 |
-| full | GPT | 出剩余曲目,生成一张总览图和 ZIP | 人工审核 |
+| full | 管理员运行批量脚本 | 出剩余曲目并检查文字,生成总览图和 ZIP | 人工审核 |
 
 样片审核默认开启,只有负责人明确授权才跳过,见“跳过样片审核”。
 
@@ -31,7 +31,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 - `4x3/01-歌曲名.png`:4:3 成品。
 - `16x9/01-歌曲名.png`:16:9 成品。
 - `<专辑名>-封面合集.zip`:只含上面两个目录的 PNG。放在本机目录,不上传到任务评论,评论里写完整路径和文件大小。
-- `_work/`:原封面、`album-cover-sketch.png`、`tracklist.json`、`design-plan.json`、`gpt-inputs/`、`review-sheet.jpg`。
+- `_work/`:原封面、`album-cover-sketch.png`、`tracklist.json`、`design-plan.json`、`batch-config.json`、`batch-status.json`、`gpt-inputs/`、`review-sheet.jpg`。检查没通过的图放在 `batch-failed/`。
 
 序号按实际出图的曲目连续编号。文件名里的非法字符做必要替换,图上的文字保持准确。重出时直接覆盖。
 
@@ -61,40 +61,72 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 4. 把本次使用的提示词、配色和字体风格写入 `_work/design-plan.json`。
 5. 退回重做时,把人工意见逐条加进提示词,再重新生成。
 
-## full 阶段(GPT)
+## full 阶段(批量脚本)
 
-1. 重新运行准备脚本,把已通过的两张样片作为额外参数传入。
-2. 按 `references/prompts.md` 的 A、B、C、D 版式给剩余曲目排表,写入 `_work/design-plan.json`。相邻曲目不用同一版式,紧跟样片的曲目不用样片的版式,同一首歌的 4:3 和 16:9 用同一版式。
-3. 逐首生成剩余曲目的 4:3 和 16:9,每张图单独生成一次。画风、配色、唱片封面、字体和配饰与样片一致;唱片封面、唱机和文字的位置按版式变化。不要改动已通过的样片。
-4. 一次运行尽量做完。中断或被续派时,先核对 `4x3/` 和 `16x9/`,从缺的第一首继续,不重出已有的图。没做完就写“已完成到第 X 首”交回管理员。
-5. 退回时只重做被指出的图片。
-6. 全部出完后生成待审总览图,跳过样片序号:
+由管理员运行 `scripts/batch_covers.py`,不派给 GPT Agent。脚本直接调用 Magpie 的生图和看图工具,每张图都是独立请求,不积累上下文。
 
-   ```bash
-   zsh scripts/make_review_sheet.sh "<专辑目录>" "<专辑目录>/_work/review-sheet.jpg" 01
+1. 写 `_work/batch-config.json`:
+
+   ```json
+   {
+     "singer": "歌手名,没有就留空",
+     "elements": "封面可包含的元素",
+     "sample_track": 1,
+     "skip_sample": false,
+     "forbidden_texts": ["不能上图的文字,如主创姓名"],
+     "allowed_texts": ["可以上图的其他文字,如唱片封面上原有的字"]
+   }
    ```
 
-7. 打包 ZIP,确认图片数等于曲目数的两倍。
+2. 运行脚本,直到退出码不是 3:
+
+   ```bash
+   python3 scripts/batch_covers.py "<专辑目录>"
+   ```
+
+| 退出码 | 含义 | 下一步 |
+|---|---|---|
+| 0 | 全部通过,总览图和 ZIP 已生成 | 送人工审核 |
+| 3 | 单次运行时间到,进度已保存 | 再运行一次 |
+| 4 | 额度耗尽,已立即停止 | 按“失败处理” |
+| 5 | 有图重出 2 次仍未通过,其余已完成 | 列出问题,等负责人决定 |
+| 2 | 输入错误 | 写明错误,等负责人决定 |
+
+脚本的规则:
+
+- 提示词从 `references/prompts.md` 填写,不要另写。
+- 版式按 A、B、C、D 轮换,同一首歌的两张图用同一版式。不改动样片。
+- 目录里已有的图不重出,所以中断后直接再运行就能接续。
+- 每张图都检查比例和文字。文字必须包含歌名、“黑胶试听”和歌手名,不能有“无歌手”和 `forbidden_texts`。不合格自动重出,最多 2 次。
+- 其他多余文字不重出,写在结果的 `extras` 里,交给人工审核时看。
+
+退回时只重做被指出的图片,完成后脚本会重新生成总览图和 ZIP:
+
+```bash
+python3 scripts/batch_covers.py "<专辑目录>" --redo 03 --redo 05-4x3 --note "审核意见"
+```
+
+未通过的图要重新尝试时,加 `--retry-failed`。
 
 ## 跳过样片审核
 
 只有负责人在卡片或评论里明确写了“跳过样片审核”才适用,其他人和执行人不能自行决定。
 
-简笔画通过后直接进入 full 阶段:
+简笔画通过后:
 
-1. 先做完 sample 阶段的第 1 到 4 步,把样片曲目的两张图作为样片。
-2. 按 full 阶段继续出剩余曲目,把这两张图传给准备脚本当样片。
-3. 生成总览图时不传跳过序号,样片也进总览图,由负责人在终审时一起看。
+1. GPT 照常做完 sample 阶段的第 1 到 4 步,交回管理员。
+2. 管理员不送样片审核,直接进入 full 阶段,`batch-config.json` 写 `"skip_sample": true`。
+3. 总览图包含样片,由负责人在终审时一起看。
 
 ## 参考图交付
 
-每次调用 GPT 生图前都必须运行:
+sample 阶段每轮生图前运行一次,full 阶段由批量脚本自动运行:
 
 ```bash
 zsh scripts/prepare_gpt_inputs.sh "<专辑目录>/_work/album-cover-sketch.png" "<专辑目录>/_work/gpt-inputs" [已通过的样片...]
 ```
 
-Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-album-covers-skill/scripts/` 下的同名脚本。
+Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-album-covers-skill/scripts/` 下的同名脚本。批量脚本同样如此。
 
 生图工具最多接受 5 张参考图。脚本每次最多输出 5 张,每张都小于 1,000,000 字节,并写入 `manifest.json`:
 

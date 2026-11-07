@@ -10,3 +10,4 @@
 - `assets/gpt-inputs/`:固定参考图,每张小于 1,000,000 字节。
 - `scripts/prepare_gpt_inputs.sh`:生图前准备并检查参考图。
 - `scripts/make_review_sheet.sh`:生成待审总览图。
+- `scripts/batch_covers.py`:full 阶段批量出图并检查文字。
