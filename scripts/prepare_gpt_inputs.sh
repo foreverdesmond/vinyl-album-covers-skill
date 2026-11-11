@@ -1,7 +1,8 @@
 #!/bin/zsh
 # 准备交给 GPT 的参考图:最多 5 张,每张都小于 1,000,000 字节,缺图或超限时失败退出。
 # 不传样片时用 2 张 B 站构图图;传入样片时用样片替代 B 站构图图。
-# 用法:prepare_gpt_inputs.sh <已通过的简笔画封面> <输出目录> [已通过的样片...]
+# 用法:prepare_gpt_inputs.sh <唱片封面图> <输出目录> [已通过的样片...]
+# 唱片封面图默认是已通过审核的简笔画;负责人授权用原图时是 _work/original-cover.*。
 set -u
 LIMIT=1000000
 RAW=https://raw.githubusercontent.com/foreverdesmond/vinyl-album-covers-skill/main/assets/gpt-inputs
@@ -10,11 +11,11 @@ HERE=${0:A:h}/../assets/gpt-inputs
 MAX_IMAGES=5
 FIXED=(02-bilibili-layout-1.jpg 03-bilibili-layout-2.jpg 04-style-eason-wo-bu-hao-ai.jpg 05-channel-logo.png)
 
-[[ $# -ge 2 ]] || { print -u2 "用法:$0 <简笔画封面> <输出目录> [样片...]"; exit 2; }
-sketch=$1; out=$2; shift 2
+[[ $# -ge 2 ]] || { print -u2 "用法:$0 <唱片封面图> <输出目录> [样片...]"; exit 2; }
+cover=$1; out=$2; shift 2
 [[ $# -le 2 ]] || { print -u2 "【输入图超限】样片最多 2 张"; exit 1; }
 [[ $# -eq 0 ]] || FIXED=(04-style-eason-wo-bu-hao-ai.jpg 05-channel-logo.png)
-[[ -s $sketch ]] || { print -u2 "【输入图缺失】简笔画封面:$sketch"; exit 1; }
+[[ -s $cover ]] || { print -u2 "【输入图缺失】唱片封面图:$cover"; exit 1; }
 mkdir -p "$out" || exit 1
 rm -f "$out"/*(N)
 
@@ -50,7 +51,7 @@ fetch_fixed() {
   curl -fsSL --max-time 60 "$RAW/$name" -o "$dst"
 }
 
-shrink "$sketch" "$out/01-album-sketch.jpg" || { print -u2 "【输入图超限】简笔画封面"; exit 1; }
+shrink "$cover" "$out/01-album-cover.jpg" || { print -u2 "【输入图超限】唱片封面图"; exit 1; }
 for name in $FIXED; do
   tmp=$out/.tmp-$name
   fetch_fixed "$name" "$tmp" || { print -u2 "【输入图缺失】$name"; exit 1; }

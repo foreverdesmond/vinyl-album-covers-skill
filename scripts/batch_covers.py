@@ -3,10 +3,13 @@
 
 用法:batch_covers.py <专辑目录> [--max-seconds 420] [--redo 03 --redo 05-4x3 --note 意见] [--retry-failed]
 
-输入:_work/tracklist.json、_work/batch-config.json、_work/album-cover-sketch.png、已通过的样片。
+输入:_work/tracklist.json、_work/batch-config.json、唱片封面图、已通过的样片。
+唱片封面图由 batch-config.json 的 cover_source 决定:sketch(默认)用 _work/album-cover-sketch.png,
+original 用 _work/original-cover.*(只有负责人授权用原图时才写 original)。
 退出码:0 全部完成  2 输入错误  3 时间到,再运行一次继续  4 额度耗尽  5 有图未通过,见 _work/batch-status.json
 """
 import argparse
+import glob
 import fcntl
 import json
 import os
@@ -134,14 +137,29 @@ def find_sample(album, sample, folder):
     raise InputError(f"缺少样片:{folder}/{sample}-*.png")
 
 
-def prepare_references(album, sample):
+def cover_image(work, config):
+    source = (config.get("cover_source") or "sketch").strip()
+    if source == "sketch":
+        path = os.path.join(work, "album-cover-sketch.png")
+        if not os.path.exists(path):
+            raise InputError(f"缺少简笔画:{path}")
+        return path
+    if source == "original":
+        found = sorted(p for p in glob.glob(os.path.join(work, "original-cover.*")) if not p.endswith(".tmp"))
+        if len(found) != 1:
+            raise InputError(f"cover_source=original 时 _work/ 里应有且只有一个 original-cover.*,实际 {len(found)} 个")
+        return found[0]
+    raise InputError(f"batch-config.json 的 cover_source 只能是 sketch 或 original,实际是 {source!r}")
+
+
+def prepare_references(album, sample, cover):
     work = os.path.join(album, "_work")
     inputs = os.path.join(work, "gpt-inputs")
     result = subprocess.run(
         [
             "zsh",
             skill_file("scripts", "prepare_gpt_inputs.sh"),
-            os.path.join(work, "album-cover-sketch.png"),
+            cover,
             inputs,
             find_sample(album, sample, "16x9"),
             find_sample(album, sample, "4x3"),
@@ -349,7 +367,7 @@ def main():
             if len(props) < MIN_PROPS:
                 raise InputError(f"batch-config.json 的 elements 只有 {len(props)} 个物件,至少要 {MIN_PROPS} 个具体物件")
             templates = load_templates()
-            references = prepare_references(album, sample)
+            references = prepare_references(album, sample, cover_image(work, config))
             if len(references) != 5:
                 raise InputError(f"参考图应为 5 张,实际 {len(references)} 张")
             for item in todo:

@@ -15,6 +15,26 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 
 样片审核默认开启,只有负责人明确授权才跳过,见“跳过样片审核”。
 
+## 唱片封面来源
+
+样片和整张里的唱片封面默认用已通过审核的简笔画,不用原封面。这是为了防止执行人擅自拿原封面出图。
+
+有些原封面本身就是卡通画,可以直接用。只有负责人授权时才改用原图,授权方式有两种:
+
+- 发卡时在卡片里写“唱片封面:用原图”。这张卡跳过 sketch 阶段,直接从 sample 开始。
+- 简笔画审核时回复“用原图”(也可以带其他意见)。之后的样片和整张都改用原图。
+
+负责人之后也可以回复“改用简笔画”或“改用原图”切换,新的选择覆盖旧的。授权只认负责人本人写的卡片描述或评论,只对这一张卡有效。执行人和管理员不能自己决定用原图,也不能参照别的卡。
+
+管理员用 issue metadata `vinyl_cover_source` 记录来源:`original` 表示用原图,没有这个键或写 `sketch` 都表示用简笔画。派给 GPT 时在派发评论里写明本次用哪张图。
+
+| 来源 | 文件 |
+|---|---|
+| 简笔画(默认) | `_work/album-cover-sketch.png` |
+| 原图 | `_work/original-cover.<扩展名>`,目录里只能有一个 |
+
+不要为了改用原图去覆盖或改名 `album-cover-sketch.png`。
+
 样片通过后由负责人选择“立刻做”“定时做”或“待定”,管理员按选择排期。执行人只做已派发的阶段,不管排期。
 
 ## 输入
@@ -56,7 +76,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
 ## sample 阶段(GPT)
 
 1. 查官方或可靠音乐目录,核实曲目和曲序,写入 `_work/tracklist.json`,记录来源和版本。不出图的曲目保留记录,但不占成品编号。
-2. 运行参考图准备脚本,见下一节。
+2. 运行参考图准备脚本,见“参考图交付”。第一个参数按派发评论写的来源传入:简笔画传 `_work/album-cover-sketch.png`;用原图时传 `_work/original-cover.<扩展名>`,这个文件还没有就先把任务里的原封面保存过去。
 3. 按 `references/prompts.md` 把卡片元素展开成不少于 4 个具体物件,再用封面提示词为样片曲目的 4:3 和 16:9 各生成一次。
 4. 把本次使用的提示词、配色、字体风格和物件清单写入 `_work/design-plan.json`,物件清单的字段名是 `props`,格式是字符串数组。
 5. 退回重做时,把人工意见逐条加进提示词,再重新生成。
@@ -73,6 +93,7 @@ description: "黑胶试听频道的视频封面流程:先把唱片封面转成�
      "elements": "design-plan.json 的 props,用顿号连接,不少于 4 个",
      "sample_track": 1,
      "skip_sample": false,
+     "cover_source": "sketch 或 original,没有授权用原图时写 sketch",
      "forbidden_texts": ["不能上图的文字,如主创姓名"],
      "allowed_texts": ["可以上图的其他文字,如唱片封面上原有的字"]
    }
@@ -120,11 +141,13 @@ python3 scripts/batch_covers.py "<专辑目录>" --redo 03 --redo 05-4x3 --note 
 
 ## 参考图交付
 
-sample 阶段每轮生图前运行一次,full 阶段由批量脚本自动运行:
+sample 阶段每轮生图前运行一次,full 阶段由批量脚本按 `cover_source` 自动运行:
 
 ```bash
-zsh scripts/prepare_gpt_inputs.sh "<专辑目录>/_work/album-cover-sketch.png" "<专辑目录>/_work/gpt-inputs" [已通过的样片...]
+zsh scripts/prepare_gpt_inputs.sh "<唱片封面图>" "<专辑目录>/_work/gpt-inputs" [已通过的样片...]
 ```
+
+`<唱片封面图>` 见“唱片封面来源”。
 
 Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-album-covers-skill/scripts/` 下的同名脚本。批量脚本同样如此。
 
@@ -132,7 +155,7 @@ Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-a
 
 | 文件 | 作用 |
 |---|---|
-| `01-album-sketch.jpg` | 已通过审核的简笔画封面 |
+| `01-album-cover.jpg` | 唱片封面图:默认是已通过审核的简笔画,授权时是原图 |
 | `02`、`03-bilibili-layout-*.jpg` | 构图和元素位置参考,仅 sample 阶段 |
 | `04-style-eason-wo-bu-hao-ai.jpg` | 风格参考 |
 | `05-channel-logo.png` | 频道 LOGO |
@@ -142,7 +165,17 @@ Skill 目录里没有脚本时,使用 `/Users/richy/Projects/CodexImages/vinyl-a
 
 - 脚本失败时不要生图。在评论写明脚本输出的【输入图缺失】、【输入图超限】或【输入图损坏】,交回管理员。
 - 生图时必须把 `manifest.json` 列出的全部图片作为图片输入,不能只写路径或文字描述。
-- GPT 只使用已通过审核的简笔画,不要传入原封面。
+- GPT 只使用派发评论指定的唱片封面图。派发评论没写“用原图”时一律用已通过审核的简笔画,不要传入原封面。
+
+## 送审预览图
+
+挂到评论上的待审图片一律先压缩,不要上传原图:
+
+```bash
+zsh scripts/make_previews.sh "<专辑目录>/_work/previews" <待审图片>...
+```
+
+脚本输出 JPEG,长边不超过 1600 像素,每张小于 500,000 字节,文件名带上所在目录(如 `16x9-01-歌名.jpg`),每行打印一张预览图的完整路径。把这些路径作为附件上传。成品原图留在本机目录,评论里写完整路径。
 
 ## 失败处理
 
