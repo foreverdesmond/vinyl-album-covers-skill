@@ -90,7 +90,7 @@ def build_prompt(templates, config, title, layout, ratio, note):
     else:
         prompt = prompt.replace("歌手名:{歌手名}\n", "").replace(",歌手名再次之", "")
         prompt = prompt.replace(
-            "歌曲名次之。", "歌曲名次之。画面上不要出现歌手名、主创姓名或‘无歌手’这类文字。"
+            "黑胶试听次之。", "黑胶试听次之。画面上不要出现歌手名、主创姓名或‘无歌手’这类文字。"
         )
     prompt = prompt.replace("{歌曲名}", title)
     prompt = prompt.replace("{具体物件清单}", config["elements"])
